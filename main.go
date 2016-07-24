@@ -26,16 +26,19 @@ func main() {
 }
 
 func run(opts serverOption) {
+	fmt.Printf("%s START\n", opts.name)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("sleeping...")
+		var sec int
 		if opts.sec > 0 {
-			time.Sleep(time.Duration(opts.sec) * time.Second)
+			sec = opts.sec
 		} else {
-			sec := rand.Intn(5) + 1
-			time.Sleep(time.Duration(sec) * time.Second)
+			sec = rand.Intn(5) + 1
 		}
+		fmt.Printf("%d sec sleeping...\n", sec)
+		time.Sleep(time.Duration(sec) * time.Second)
 		fmt.Fprintf(w, opts.name)
 	})
-	fmt.Printf("%s: SERVER START", opts.name)
 	http.ListenAndServe(fmt.Sprintf(":%d", opts.port), nil)
 }
 
